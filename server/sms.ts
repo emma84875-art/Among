@@ -32,6 +32,16 @@ export interface VerifySmsResult {
 export async function sendVerificationSms(phoneNumber: string): Promise<SendSmsResult> {
   const cleanPhone = phoneNumber.trim();
 
+  // No SMS provider is wired up, so codes can only be surfaced in development. In production
+  // this must fail closed instead of handing the code back to the caller.
+  if (process.env.NODE_ENV === 'production') {
+    return {
+      success: false,
+      code: 'SMS_NOT_CONFIGURED',
+      error: 'SMS verification is not available. Please sign in with Firebase phone authentication.',
+    };
+  }
+
   // 1. Check rate limit cooldown (30 seconds between requests for the same number)
   const lastTime = lastRequestTimestamps.get(cleanPhone) || 0;
   const now = Date.now();

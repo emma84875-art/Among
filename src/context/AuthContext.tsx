@@ -246,8 +246,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            uid: fbUser.uid,
-            phoneNumber: fbUser.phoneNumber || phoneNumber,
+            idToken: await fbUser.getIdToken(),
             displayName: fbUser.displayName,
           }),
         });

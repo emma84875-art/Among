@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Local runtime database (contains users and live session tokens)
+data/

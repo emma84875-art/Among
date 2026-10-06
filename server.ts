@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { WebSocketServer, WebSocket } from 'ws';
@@ -34,6 +35,7 @@ import {
   storeEncryptedMessage,
   getPendingMessagesForRecipient,
   getMessagesForChat,
+  getEncryptedMessageById,
   updateEncryptedMessageStatus,
   getNextChatSequence,
   StoredUser,
@@ -73,6 +75,49 @@ function authMiddleware(req: AuthenticatedRequest, res: Response, next: () => vo
   req.user = sessionData.user;
   req.token = token;
   next();
+}
+
+function getFirebaseApiKey(): string | null {
+  if (process.env.FIREBASE_API_KEY) return process.env.FIREBASE_API_KEY;
+  try {
+    const cfg = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), 'firebase-applet-config.json'), 'utf-8')
+    );
+    return typeof cfg.apiKey === 'string' ? cfg.apiKey : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Verifies a Firebase ID token through Google's Identity Toolkit and returns the verified
+ * uid and phone number, or null if the token is invalid, expired or for another project.
+ */
+async function verifyFirebaseIdToken(
+  idToken: string
+): Promise<{ uid: string; phoneNumber?: string } | null> {
+  const apiKey = getFirebaseApiKey();
+  if (!apiKey) return null;
+  try {
+    const resp = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(apiKey)}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      }
+    );
+    if (!resp.ok) return null;
+    const data: any = await resp.json();
+    const u = data?.users?.[0];
+    if (!u || typeof u.localId !== 'string') return null;
+    return {
+      uid: u.localId,
+      phoneNumber: typeof u.phoneNumber === 'string' ? u.phoneNumber : undefined,
+    };
+  } catch {
+    return null;
+  }
 }
 
 async function startServer() {
@@ -186,19 +231,29 @@ async function startServer() {
   // Step 2b: Firebase Authentication Session Integration
   app.post('/api/auth/firebase-login', async (req, res) => {
     try {
-      const { uid, phoneNumber, displayName } = req.body || {};
+      const { idToken, displayName } = req.body || {};
 
-      if (!uid || typeof uid !== 'string') {
-        res.status(400).json({ error: 'Valid Firebase user identifier required.' });
+      if (!idToken || typeof idToken !== 'string') {
+        res.status(400).json({ error: 'A Firebase ID token is required.' });
         return;
       }
 
-      const cleanPhone =
-        phoneNumber && typeof phoneNumber === 'string' && phoneNumber.trim()
-          ? phoneNumber.trim()
-          : `+1${uid.replace(/[^0-9]/g, '').padEnd(10, '0').slice(0, 10)}`;
+      // Never trust uid / phone number from the request body: verify the ID token with Google
+      // and take identity only from the verified result.
+      const verified = await verifyFirebaseIdToken(idToken);
+      if (!verified || !verified.phoneNumber) {
+        res.status(401).json({ error: 'Could not verify your Firebase sign-in. Please try again.' });
+        return;
+      }
 
-      const { user, isNewUser } = createOrLoginPhoneUser(cleanPhone, uid, displayName);
+      const uid = verified.uid;
+      const cleanPhone = verified.phoneNumber;
+
+      const { user, isNewUser } = createOrLoginPhoneUser(
+        cleanPhone,
+        uid,
+        typeof displayName === 'string' ? displayName.slice(0, 80) : undefined
+      );
       const session = createSession(user.id);
 
       res.json({
@@ -707,7 +762,11 @@ async function startServer() {
       return;
     }
     const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 100;
-    const messages = getMessagesForChat(chatId, isNaN(limit) ? 100 : limit);
+    const me = req.user!.id;
+    // Only return messages the caller sent or received.
+    const messages = getMessagesForChat(chatId, isNaN(limit) ? 100 : limit).filter(
+      (m) => m.senderId === me || m.recipientId === me
+    );
     res.json({ messages });
   });
 
@@ -808,16 +867,12 @@ async function startServer() {
     try {
       const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
       const token = url.searchParams.get('token');
-      const paramUserId = url.searchParams.get('userId');
 
       if (token) {
         const session = getSession(token);
         if (session) {
           boundUserId = session.user.id;
         }
-      }
-      if (!boundUserId && paramUserId) {
-        boundUserId = paramUserId;
       }
     } catch {
       // Ignored
@@ -844,13 +899,18 @@ async function startServer() {
 
         switch (payload.type) {
           case 'auth:identify': {
-            const { userId, token } = payload;
-            let authenticatedId = userId;
+            const { token } = payload;
+            // Identity comes only from a valid session token, never from a client-supplied userId.
+            let authenticatedId: string | null = null;
             if (token) {
               const session = getSession(token);
               if (session) authenticatedId = session.user.id;
             }
-            if (authenticatedId) {
+            if (!authenticatedId) {
+              ws.send(JSON.stringify({ type: 'error', message: 'Authentication required.' }));
+              break;
+            }
+            {
               if (boundUserId && boundUserId !== authenticatedId) {
                 unregisterUserSocket(boundUserId, ws);
               }
@@ -866,6 +926,10 @@ async function startServer() {
           }
 
           case 'message:send': {
+            if (!boundUserId) {
+              ws.send(JSON.stringify({ type: 'error', message: 'Authentication required.' }));
+              return;
+            }
             const { id, chatId, recipientId, envelope, sequenceNumber } = payload;
             if (!id || !chatId || !recipientId || !envelope) {
               ws.send(JSON.stringify({
@@ -875,16 +939,7 @@ async function startServer() {
               return;
             }
 
-            const senderId = boundUserId || payload.senderId || 'you';
-            if (senderId) {
-              registerUserSocket(senderId, ws);
-            }
-            if (payload.senderId && payload.senderId !== senderId) {
-              registerUserSocket(payload.senderId, ws);
-            }
-            if (!boundUserId) {
-              boundUserId = senderId;
-            }
+            const senderId = boundUserId;
             const now = new Date().toISOString();
 
             // Store strictly zero-knowledge encrypted envelope
@@ -1005,8 +1060,11 @@ async function startServer() {
           }
 
           case 'ack:delivered': {
-            const { messageId, chatId, senderId } = payload;
-            if (messageId) {
+            const { messageId, chatId } = payload;
+            // Only the recipient of a message may acknowledge it; the sender is taken from storage.
+            const target = boundUserId && messageId ? getEncryptedMessageById(messageId) : null;
+            if (target && target.recipientId === boundUserId) {
+              const senderId = target.senderId;
               updateEncryptedMessageStatus(messageId, 'delivered');
               if (senderId) {
                 sendToUser(senderId, {
@@ -1021,8 +1079,11 @@ async function startServer() {
           }
 
           case 'ack:read': {
-            const { messageId, chatId, senderId } = payload;
-            if (messageId) {
+            const { messageId, chatId } = payload;
+            // Only the recipient of a message may acknowledge it; the sender is taken from storage.
+            const target = boundUserId && messageId ? getEncryptedMessageById(messageId) : null;
+            if (target && target.recipientId === boundUserId) {
+              const senderId = target.senderId;
               updateEncryptedMessageStatus(messageId, 'read');
               if (senderId) {
                 sendToUser(senderId, {
@@ -1068,8 +1129,8 @@ async function startServer() {
           case 'typing:start':
           case 'typing:stop': {
             const { recipientId, chatId } = payload;
-            const senderId = boundUserId || payload.senderId || 'peer';
-            if (recipientId) {
+            const senderId = boundUserId;
+            if (senderId && recipientId) {
               sendToUser(recipientId, {
                 type: 'typing:indicator',
                 chatId,

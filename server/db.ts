@@ -206,7 +206,7 @@ function ensureDbExists(): DatabaseSchema {
   }
 
   // Seed two realistic peaceful accounts if users table is empty
-  if (db.users.length === 0) {
+  if (db.users.length === 0 && process.env.NODE_ENV !== 'production') {
     const salt1 = crypto.randomBytes(16).toString('hex');
     const hash1 = `${salt1}:${crypto.scryptSync('password123', salt1, 64).toString('hex')}`;
     const salt2 = crypto.randomBytes(16).toString('hex');
@@ -1211,6 +1211,11 @@ export function getMessagesForChat(chatId: string, limit: number = 100): StoredE
   const chatMsgs = db.encryptedMessages.filter((m) => m.chatId === chatId);
   chatMsgs.sort((a, b) => a.sequenceNumber - b.sequenceNumber);
   return chatMsgs.slice(-limit);
+}
+
+export function getEncryptedMessageById(id: string): StoredEncryptedMessage | undefined {
+  const db = ensureDbExists();
+  return db.encryptedMessages.find((m) => m.id === id);
 }
 
 export function updateEncryptedMessageStatus(

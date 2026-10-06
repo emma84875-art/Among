@@ -3516,6 +3516,7 @@ export function ConversationScreen({
               );
             })}
           </AnimatePresence>
+          )}
 
           {/* Real-time typing bubble in conversation stream */}
           <AnimatePresence>
