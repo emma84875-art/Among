@@ -1,0 +1,268 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Among user account profile with presence and privacy settings",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique user identifier matching Firebase Auth UID",
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Verified E.164 phone number",
+          "pattern": "^\\+[1-9]\\d{6,14}$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User display name",
+          "minLength": 2,
+          "maxLength": 40
+        },
+        "username": {
+          "type": "string",
+          "description": "Unique user handle",
+          "minLength": 3,
+          "maxLength": 20,
+          "pattern": "^[a-zA-Z0-9_]{3,20}$"
+        },
+        "avatarColor": {
+          "type": "string",
+          "description": "Monochrome avatar tone class"
+        },
+        "initials": {
+          "type": "string",
+          "description": "User initials for avatar display",
+          "maxLength": 3
+        },
+        "bio": {
+          "type": "string",
+          "description": "Personal sanctuary statement",
+          "maxLength": 160
+        },
+        "presence": {
+          "type": "string",
+          "description": "Mindful presence status indicator",
+          "enum": ["here", "focus", "quiet", "offline", "walking"]
+        },
+        "statusMessage": {
+          "type": "string",
+          "description": "Quiet mood or status note",
+          "maxLength": 80
+        },
+        "shareOnlineStatus": {
+          "type": "boolean",
+          "description": "Whether presence status is visible to inner circle"
+        },
+        "closeUserIds": {
+          "type": "array",
+          "description": "Array of close circle friend user IDs"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of user creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        }
+      },
+      "required": ["id", "phoneNumber", "displayName", "username", "presence"]
+    },
+    "Connection": {
+      "title": "Connection",
+      "description": "Established mutual sanctuary connection between two users",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Connection document identifier",
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "user1Id": {
+          "type": "string",
+          "description": "First participant user ID"
+        },
+        "user2Id": {
+          "type": "string",
+          "description": "Second participant user ID"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of connection establishment"
+        }
+      },
+      "required": ["id", "user1Id", "user2Id", "createdAt"]
+    },
+    "ConnectionRequest": {
+      "title": "ConnectionRequest",
+      "description": "Invitation to connect in an intimate circle",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Connection request identifier",
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "senderId": {
+          "type": "string",
+          "description": "User ID of the invitation sender"
+        },
+        "receiverId": {
+          "type": "string",
+          "description": "User ID of the invitation recipient"
+        },
+        "status": {
+          "type": "string",
+          "description": "Request state",
+          "enum": ["pending", "accepted", "declined", "cancelled"]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of request creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of request update"
+        }
+      },
+      "required": ["id", "senderId", "receiverId", "status", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "Quiet direct messaging sanctuary between connected peers",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Chat thread identifier",
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "participants": {
+          "type": "array",
+          "description": "Array of user IDs participating in the conversation"
+        },
+        "lastMessage": {
+          "type": "string",
+          "description": "Preview of last message sent",
+          "maxLength": 500
+        },
+        "lastMessageTime": {
+          "type": "string",
+          "description": "ISO timestamp of last message"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of thread activity"
+        },
+        "disappearingTimer": {
+          "type": "string",
+          "description": "Duration for automatic message dissolution (off, 30s, 5m, 1h, 24h, 7d, 4w)",
+          "enum": ["off", "30s", "5m", "1h", "24h", "7d", "4w"]
+        }
+      },
+      "required": ["id", "participants"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Single whisper or conversational entry in a chat thread",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Message identifier",
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "chatId": {
+          "type": "string",
+          "description": "Parent chat identifier"
+        },
+        "senderId": {
+          "type": "string",
+          "description": "User ID of message author"
+        },
+        "text": {
+          "type": "string",
+          "description": "Message text payload",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of message creation"
+        },
+        "expiresAt": {
+          "type": "string",
+          "description": "ISO timestamp or epoch ms when message auto-deletes"
+        },
+        "reactions": {
+          "type": "object",
+          "description": "Map of emoji to user ID arrays reacting to this whisper"
+        }
+      },
+      "required": ["id", "chatId", "senderId", "text", "createdAt"]
+    },
+    "Reaction": {
+      "title": "Reaction",
+      "description": "Emoji reaction on a specific message",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Reaction identifier",
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "chatId": {
+          "type": "string",
+          "description": "Parent chat identifier"
+        },
+        "messageId": {
+          "type": "string",
+          "description": "Target message identifier"
+        },
+        "userId": {
+          "type": "string",
+          "description": "User ID of the reacting participant"
+        },
+        "emoji": {
+          "type": "string",
+          "description": "Emoji character",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of reaction creation"
+        }
+      },
+      "required": ["id", "chatId", "messageId", "userId", "emoji", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and presence state"
+    },
+    "/connections/{connectionId}": {
+      "schema": "Connection",
+      "description": "Active mutual relationships"
+    },
+    "/connectionRequests/{requestId}": {
+      "schema": "ConnectionRequest",
+      "description": "Pending, accepted, or declined invitations"
+    },
+    "/chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Chat channels between connected individuals"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Direct message messages within a chat"
+    },
+    "/chats/{chatId}/messages/{messageId}/reactions/{reactionId}": {
+      "schema": "Reaction",
+      "description": "Individual emoji reactions attached to a chat message"
+    }
+  }
+}

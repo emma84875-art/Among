@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-serif: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+@layer base {
+  *, ::before, ::after {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    border-color: var(--border-color, #e4e4e7);
+  }
+
+  :root {
+    color-scheme: light;
+    --font-mono-system: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --color-bg-canvas: #ffffff;
+    --color-bg-surface: #fafafa;
+    --color-bg-subsurface: #f4f4f5;
+    --color-text-primary: #09090b;
+    --color-text-secondary: #52525b;
+    --color-text-muted: #71717a;
+    --color-border: #e4e4e7;
+    --border-color: #e4e4e7;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --color-bg-canvas: #09090b;
+    --color-bg-surface: #121215;
+    --color-bg-subsurface: #18181b;
+    --color-text-primary: #fafafa;
+    --color-text-secondary: #a1a1aa;
+    --color-text-muted: #71717a;
+    --color-border: #27272a;
+    --border-color: #27272a;
+  }
+
+  html,
+  body {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    background-color: var(--color-bg-canvas);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  label,
+  code,
+  kbd,
+  samp,
+  pre,
+  small,
+  strong,
+  b,
+  em,
+  i,
+  time,
+  blockquote,
+  th,
+  td,
+  li,
+  a {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Safe area insets for mobile shells */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Subtle scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(113, 113, 122, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(113, 113, 122, 0.45);
+}
+
+/* Subtle, calm background textures for chat screens */
+.paper-texture-overlay,
+.chat-texture-washi {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 160px;
+}
+
+.chat-texture-dotgrid {
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.chat-texture-linen {
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(113, 113, 122, 0.35) 3px, rgba(113, 113, 122, 0.35) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(113, 113, 122, 0.35) 3px, rgba(113, 113, 122, 0.35) 4px);
+  background-size: 16px 16px;
+}
+
+.chat-texture-graph {
+  background-image:
+    linear-gradient(to right, rgba(113, 113, 122, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(113, 113, 122, 0.35) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.chat-texture-constellation {
+  background-image:
+    radial-gradient(circle at 18% 22%, currentColor 1.2px, transparent 1.2px),
+    radial-gradient(circle at 78% 16%, currentColor 0.8px, transparent 0.8px),
+    radial-gradient(circle at 48% 68%, currentColor 1.4px, transparent 1.4px),
+    radial-gradient(circle at 86% 78%, currentColor 0.9px, transparent 0.9px),
+    radial-gradient(circle at 14% 82%, currentColor 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+
+

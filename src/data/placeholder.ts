@@ -1,0 +1,166 @@
+import { Person, ChatThread } from '../types';
+
+export const PLACEHOLDER_PEOPLE: Person[] = [
+  {
+    id: 'person-1',
+    name: 'Evelyn Gray',
+    relationship: 'Partner',
+    presence: 'here',
+    statusMessage: 'Reading by the window · quiet hours',
+    avatarColor: 'from-amber-700/70 to-stone-700',
+    initials: 'EG',
+    isInnerCircle: true,
+    lastContactTime: '12m ago',
+    phoneOrHandle: '+1 (555) 234-8901',
+  },
+  {
+    id: 'person-2',
+    name: 'Julian Vance',
+    relationship: 'Brother',
+    presence: 'walking',
+    statusMessage: 'Walking in the park with Milo',
+    avatarColor: 'from-stone-600 to-zinc-800',
+    initials: 'JV',
+    isInnerCircle: true,
+    lastContactTime: '45m ago',
+    phoneOrHandle: '+1 (555) 890-1234',
+  },
+  {
+    id: 'person-3',
+    name: 'Maya Chen',
+    relationship: 'Studio Collaborator',
+    presence: 'focus',
+    statusMessage: 'Deep work · notifications held until 5 PM',
+    avatarColor: 'from-neutral-700 to-amber-900/60',
+    initials: 'MC',
+    isInnerCircle: true,
+    lastContactTime: '2h ago',
+    phoneOrHandle: 'maya@chenstudio.co',
+  },
+  {
+    id: 'person-4',
+    name: 'Marcus Bell',
+    relationship: 'Childhood Friend',
+    presence: 'quiet',
+    statusMessage: 'Traveling · low connectivity',
+    avatarColor: 'from-stone-700 to-stone-900',
+    initials: 'MB',
+    isInnerCircle: false,
+    lastContactTime: 'Yesterday',
+    phoneOrHandle: '+1 (555) 432-6789',
+  },
+  {
+    id: 'person-5',
+    name: 'Helena R.',
+    relationship: 'Mother',
+    presence: 'here',
+    statusMessage: 'At home tending the garden',
+    avatarColor: 'from-amber-800/80 to-stone-800',
+    initials: 'HR',
+    isInnerCircle: true,
+    lastContactTime: 'Yesterday',
+    phoneOrHandle: '+1 (555) 345-6780',
+  },
+  {
+    id: 'person-6',
+    name: 'Soren Lind',
+    relationship: 'Architect',
+    presence: 'offline',
+    statusMessage: 'Away for the weekend',
+    avatarColor: 'from-zinc-700 to-neutral-800',
+    initials: 'SL',
+    isInnerCircle: false,
+    lastContactTime: '3d ago',
+    phoneOrHandle: 'soren@lindatelier.no',
+  },
+];
+
+export const PLACEHOLDER_CHATS: ChatThread[] = [
+  {
+    id: 'chat-1',
+    person: PLACEHOLDER_PEOPLE[0],
+    lastMessage: {
+      id: 'm1',
+      sender: 'them',
+      text: 'Made fresh tea for when you step away from the desk.',
+      timestamp: '14:24',
+      isUnread: true,
+    },
+    isPinned: true,
+  },
+  {
+    id: 'chat-2',
+    person: PLACEHOLDER_PEOPLE[1],
+    lastMessage: {
+      id: 'm2',
+      sender: 'you',
+      text: 'See you this Sunday around four.',
+      timestamp: '13:08',
+      isUnread: false,
+      status: 'delivered',
+    },
+    isPinned: true,
+  },
+  {
+    id: 'chat-3',
+    person: PLACEHOLDER_PEOPLE[2],
+    lastMessage: {
+      id: 'm3',
+      sender: 'them',
+      text: 'The paper prototypes arrived from Kyoto. Texture is extraordinary.',
+      timestamp: '11:42',
+      isUnread: false,
+    },
+    isPinned: false,
+  },
+  {
+    id: 'chat-4',
+    person: PLACEHOLDER_PEOPLE[4],
+    lastMessage: {
+      id: 'm4',
+      sender: 'them',
+      text: 'Sending love. No need to reply quickly, just wanted to check in.',
+      timestamp: 'Yesterday',
+      isUnread: false,
+    },
+    isPinned: false,
+    isQuiet: true,
+  },
+  {
+    id: 'chat-5',
+    person: PLACEHOLDER_PEOPLE[3],
+    lastMessage: {
+      id: 'm5',
+      sender: 'you',
+      text: 'Safe travels through the pass, Marcus.',
+      timestamp: 'Sep 10',
+      isUnread: false,
+      status: 'read',
+    },
+    isPinned: false,
+  },
+];
+
+export const ONBOARDING_STEPS = [
+  {
+    title: 'A sanctuary for the few',
+    subtitle: 'Not an inbox. Not a broadcast network.',
+    description:
+      'Among is crafted for the 5 to 15 people who truly shape your life. No strangers, no spam, no vanity metrics.',
+    tag: 'Closeness',
+  },
+  {
+    title: 'Peace by default',
+    subtitle: 'Conversations without cognitive burden.',
+    description:
+      'No anxiety-inducing typing bubbles, no read receipt pressure, no artificial urgency. Message at human pace.',
+    tag: 'Serenity',
+  },
+  {
+    title: 'Zero trace, absolute trust',
+    subtitle: 'Private by mathematical guarantee.',
+    description:
+      'Your conversations stay strictly between your devices. No behavioral profiling, no tracking, no ad algorithms.',
+    tag: 'Sovereignty',
+  },
+];

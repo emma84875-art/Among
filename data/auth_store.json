@@ -1,0 +1,130 @@
+{
+  "users": [
+    {
+      "id": "seed-user-elena",
+      "displayName": "Elena Vance",
+      "username": "elena",
+      "usernameLower": "elena",
+      "email": "elena@among.local",
+      "emailLower": "elena@among.local",
+      "passwordHash": "d08750c314368a3f9fa60e5d3e494ce1:3ac0ca9c077f77a0ddf8a27b07b2748d53117ffe1f88e1b2967474efb8b672cf4a00704772d9f3ff58b1cd8e8ddf3d122898f622c6d0767f4fcebc4073cbeff7",
+      "avatarColor": "bg-zinc-900 text-zinc-100",
+      "initials": "EV",
+      "bio": "Archivist & quiet gardener. Embracing slower hours.",
+      "presence": "quiet",
+      "statusMessage": "Reading by the window",
+      "shareOnlineStatus": true,
+      "closeUserIds": [],
+      "createdAt": "2026-09-12T16:01:45.280Z",
+      "phoneNumber": "+14155550101"
+    },
+    {
+      "id": "seed-user-siobhan",
+      "displayName": "Siobhan Chen",
+      "username": "siobhan",
+      "usernameLower": "siobhan",
+      "email": "siobhan@among.local",
+      "emailLower": "siobhan@among.local",
+      "passwordHash": "1beeddfdd4f9eea773681ae0a8d61c97:1f6c6ca99b7f103d78de36c2539feff7c570d2983f3828948a8fe5a01c58ce8e74181ef558060e2688bdf274b444ce4da206456245d5104c10496cf958028039",
+      "avatarColor": "bg-zinc-900 text-zinc-100",
+      "initials": "SC",
+      "bio": "Woodworker & tea enthusiast. In sanctuary mode.",
+      "presence": "focus",
+      "statusMessage": "In the studio till dusk",
+      "shareOnlineStatus": true,
+      "closeUserIds": [],
+      "createdAt": "2026-09-12T16:01:45.281Z",
+      "phoneNumber": "+14155550102"
+    },
+    {
+      "id": "969ae8e0-58f0-4f4d-9e38-78c622a81913",
+      "phoneNumber": "+14155550199",
+      "displayName": "Member ···· 0199",
+      "username": "member_0199_69a0",
+      "usernameLower": "member_0199_69a0",
+      "avatarColor": "bg-zinc-900 text-zinc-100",
+      "initials": "AM",
+      "bio": "Seeking calm conversations in the sanctuary.",
+      "presence": "quiet",
+      "statusMessage": "Quietly present",
+      "shareOnlineStatus": true,
+      "closeUserIds": [],
+      "createdAt": "2026-09-15T14:48:04.216Z"
+    },
+    {
+      "id": "f2f71e37-c76f-4fc8-92bc-d707cdcb4482",
+      "phoneNumber": "+14155550200",
+      "displayName": "Member ···· 0200",
+      "username": "member_0200_4dda",
+      "usernameLower": "member_0200_4dda",
+      "avatarColor": "bg-zinc-900 text-zinc-100",
+      "initials": "AM",
+      "bio": "Seeking calm conversations in the sanctuary.",
+      "presence": "quiet",
+      "statusMessage": "Quietly present",
+      "shareOnlineStatus": true,
+      "closeUserIds": [],
+      "createdAt": "2026-09-15T14:48:12.183Z"
+    },
+    {
+      "id": "0aa47f84-8d01-4271-bcc4-2f6e3a879f3f",
+      "phoneNumber": "+14155552671",
+      "displayName": "Member ···· 2671",
+      "username": "member_2671_4a95",
+      "usernameLower": "member_2671_4a95",
+      "avatarColor": "bg-zinc-850 text-zinc-100",
+      "initials": "AM",
+      "bio": "Seeking calm conversations in the sanctuary.",
+      "presence": "quiet",
+      "statusMessage": "Quietly present",
+      "shareOnlineStatus": true,
+      "closeUserIds": [],
+      "createdAt": "2026-09-19T04:23:10.815Z"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "44eda28e56370f53f33f2a69136d3825a251579b3e7bceb05584f0d963855824",
+      "userId": "seed-user-elena",
+      "createdAt": "2026-09-12T16:01:45.324Z",
+      "expiresAt": "2026-10-12T16:01:45.324Z"
+    },
+    {
+      "token": "990f655a8a73412de1825a5d62259915c4a8db54b682037e56d5629b7fe31196",
+      "userId": "seed-user-siobhan",
+      "createdAt": "2026-09-12T16:01:45.388Z",
+      "expiresAt": "2026-10-12T16:01:45.388Z"
+    },
+    {
+      "token": "dce54a555b478c9635265454ca853a389438842b9f0ed57428029c732400a0a7",
+      "userId": "969ae8e0-58f0-4f4d-9e38-78c622a81913",
+      "createdAt": "2026-09-15T14:48:04.216Z",
+      "expiresAt": "2026-10-15T14:48:04.216Z"
+    },
+    {
+      "token": "49d11bc502b26313c5e237e70208fd979c1f49806c6d8d78ab4509c65857a4da",
+      "userId": "f2f71e37-c76f-4fc8-92bc-d707cdcb4482",
+      "createdAt": "2026-09-15T14:48:12.183Z",
+      "expiresAt": "2026-10-15T14:48:12.183Z"
+    },
+    {
+      "token": "0209e8b0fad24cfbb93540dcee77d89d1d468bb5a8d3ccad0798ada347e86327",
+      "userId": "0aa47f84-8d01-4271-bcc4-2f6e3a879f3f",
+      "createdAt": "2026-09-19T04:23:10.815Z",
+      "expiresAt": "2026-10-19T04:23:10.815Z"
+    }
+  ],
+  "connectionRequests": [
+    {
+      "id": "32a53921-e131-4fb8-8091-9dedc6bbce5b",
+      "senderId": "seed-user-elena",
+      "receiverId": "seed-user-siobhan",
+      "status": "accepted",
+      "createdAt": "2026-09-12T16:01:45.405Z",
+      "updatedAt": "2026-09-12T16:01:45.424Z"
+    }
+  ],
+  "connections": [],
+  "blocks": [],
+  "phoneVerifications": []
+}

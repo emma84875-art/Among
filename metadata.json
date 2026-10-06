@@ -1,0 +1,6 @@
+{
+  "name": "Among",
+  "description": "A premium, calm, privacy-first mobile messaging app foundation built around staying close to your people.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
